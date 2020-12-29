@@ -1,34 +1,40 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import ListProducts from '../../components/ListProducts';
 import api from '../../services/api';
 
 function Home() {
-
     const [products, setProducts] = React.useState([]);
+    const history = useHistory();
 
     React.useEffect(() => {
         function loadPosts() {
-            api.get('/products/all').then(({ data }) => {
+            api.get('/product/all').then(({ data }) => {
                 setProducts(data);
             }).catch(error => {
                 Swal.fire("Error!", error.message, "error");
             });
         }
-
         loadPosts();
-    }, [])
+    }, []);
+
     return (
-        <main className="container">
-            <div className="p-4 p-md-5 mb-4 text-white rounded bg-dark">
-                <div className="col-md-12 px-0">
-                    <h1 className="display-4 font-italic">Welcome to the free online diary</h1>
-                    <p className="lead my-3">This is an online diary service, providing personal diaries and journals. <br /> Go ahead and register your own public diary today.</p>
+        <main className="container mt-5">
+            <div className="container">
+                <div className="row mb-2 card-group">
+                    {products.length ? products.map((item, key) => (
+                        <div className="col-md-3" key={key}>
+                            <div className="card border border-white m-3" onClick={() => history.push(`/product/${item.id}`)}>
+                                <img src={item.image} style={{ objectFit: "scale-down" }} className="card-img-top" alt={item.name} />
+                                <div className="card-body text-center">
+                                    <h5 className="card-title">{item.name}</h5>
+                                    <p className="h5 fw-bold text-muted" >€ {parseFloat(item?.price)?.toFixed(2)}</p>
+                                </div>
+                            </div>
+                        </div>
+                    )) : <p className="lead mt-5">No products found.</p>}
                 </div>
             </div>
-
-            <ListProducts products={products} />
-
         </main>
     );
 }

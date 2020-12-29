@@ -9,9 +9,9 @@ import Header from "../components/Header";
 import Menu from "../components/Menu";
 import NotFound from "../pages/NotFound";
 import MyProducts from "../pages/Products/index";
-import ProductCreate from "../pages/Products/Create";
-import ProductEdit from "../pages/Products/Edit";
-import ProductShow from "../pages/Products/Show";
+import ProductForm from "../pages/Products/Form";
+import ProductView from "../pages/Products/View";
+import About from "../pages/About";
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
     <Route
@@ -38,10 +38,13 @@ const Routes = () => (
             <Route exact path="/" component={() => <Home />} />
             <Route path="/login" component={() => <Login />} />
             <Route path="/register" component={() => <Register />} />
-            <PrivateRoute path="/product/create" component={() => <ProductCreate />} />  
-            <PrivateRoute path="/product/:id/edit" component={() => <ProductEdit />} />
-            <Route path="/product/:id" component={() => <ProductShow />} />
-            <Route path="/product" component={() => <MyProducts />} /> 
+            <Route path="/about" component={() => <About/>} />
+
+            <Route path="/products" exact  component={() => <MyProducts />} /> 
+            <PrivateRoute path="/product/create" component={() => <ProductForm />} />  
+            <PrivateRoute path="/product/:id/edit" component={(e) => <ProductForm e={e} />} />
+            <Route path="/product/:id" component={() => <ProductView />} />
+
             <Route path="*" component={() => <NotFound />} />
         </Switch>
 
